@@ -2,10 +2,11 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { AppFooter } from "@/components/app-footer";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -43,20 +44,50 @@ export default function SetPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <div className="flex justify-end p-4">
-        <ThemeToggle />
+    <div className="grid min-h-screen lg:grid-cols-2">
+      {/* Panel izquierdo con imagen (oculto en mobile) */}
+      <div className="relative hidden lg:block">
+        <Image src="/utec.webp" alt="UTEC" fill priority className="object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+        <div className="absolute bottom-0 left-0 p-10 text-white">
+          <p className="text-sm font-medium tracking-wide text-white/80 uppercase">
+            Demo Mode 2026
+          </p>
+          <h2 className="mt-1 text-2xl font-semibold">Evaluación de jurados</h2>
+        </div>
       </div>
-      <main className="flex flex-1 items-center justify-center p-4">
-        <Card className="w-full max-w-sm">
-          <CardHeader>
-            <CardTitle>Establece tu contraseña</CardTitle>
-            <CardDescription>
+
+      {/* Panel derecho con el formulario */}
+      <div className="flex flex-col">
+        <div className="flex justify-end p-4">
+          <ThemeToggle />
+        </div>
+
+        <main className="flex flex-1 items-center justify-center p-6">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="w-full max-w-sm"
+          >
+            <div className="mb-8 lg:hidden">
+              <p className="text-sm font-medium tracking-wide text-muted-foreground uppercase">
+                Demo Mode 2026
+              </p>
+            </div>
+
+            <h1 className="text-2xl font-semibold">Establece tu contraseña</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
               Es tu primer inicio de sesión. Define una contraseña para continuar.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            </p>
+
+            <motion.form
+              onSubmit={handleSubmit}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              transition={{ duration: 0.3, ease: "easeInOut", delay: 0.1 }}
+              className="mt-8 flex flex-col gap-4 overflow-hidden"
+            >
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="password">Nueva contraseña</Label>
                 <Input
@@ -85,11 +116,12 @@ export default function SetPasswordPage() {
               <Button type="submit" disabled={loading} className="mt-1">
                 {loading ? "Guardando..." : "Guardar y continuar"}
               </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </main>
-      <AppFooter />
+            </motion.form>
+          </motion.div>
+        </main>
+
+        <AppFooter />
+      </div>
     </div>
   );
 }
